@@ -87,6 +87,24 @@ ApplicationWindow {
                 onActivated: surgiView.setTrackingSourceMode(currentText)
             }
 
+            TextField {
+                id: telemetryPort
+                Layout.preferredWidth: 110
+                text: surgiView.telemetryServerPort > 0 ? surgiView.telemetryServerPort.toString() : "45454"
+                placeholderText: "tcp port"
+            }
+
+            Button {
+                text: surgiView.telemetryServerListening ? "Stop TCP" : "Start TCP"
+                onClicked: {
+                    if (surgiView.telemetryServerListening) {
+                        surgiView.stopTelemetryServer()
+                    } else {
+                        surgiView.startTelemetryServer(parseInt(telemetryPort.text))
+                    }
+                }
+            }
+
             Button {
                 text: surgiView.recording ? "Stop Recording" : "Start Recording"
                 onClicked: surgiView.recording ? surgiView.stopRecording() : surgiView.startRecording()

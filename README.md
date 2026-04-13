@@ -116,6 +116,16 @@ Tracking now supports two source modes:
 
 External mode is available through `SurgiViewController::setTrackingSourceMode("external")` and `SurgiViewController::ingestExternalTelemetry(x, y, depthMm)`.
 
+The app now also includes a TCP telemetry listener for live adapter integration.
+
+- Start the TCP listener from the UI with `source mode = external`.
+- Default port example: `45454`
+- Send newline-delimited JSON payloads such as:
+
+```json
+{"x":210.0,"y":160.0,"depthMm":12.5}
+```
+
 Current branch implementation includes an in-process external telemetry adapter stub so robotics/camera drivers can be integrated without changing overlay, measurement, or recording pipelines.
 
 ## Suggested next steps for cadaver/lab readiness

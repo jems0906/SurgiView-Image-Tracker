@@ -7,6 +7,7 @@
 #include "models/Types.h"
 #include "recording/PlaybackRecorder.h"
 #include "tracking/InstrumentTracker.h"
+#include "tracking/TcpTelemetryServer.h"
 
 namespace surgiview {
 
@@ -24,6 +25,8 @@ class SurgiViewController : public QObject {
     Q_PROPERTY(int totalSlices READ totalSlices NOTIFY sliceChanged)
     Q_PROPERTY(bool trackerRunning READ trackerRunning NOTIFY trackerRunningChanged)
     Q_PROPERTY(QString trackingSourceMode READ trackingSourceMode NOTIFY trackingSourceModeChanged)
+    Q_PROPERTY(bool telemetryServerListening READ telemetryServerListening NOTIFY telemetryServerListeningChanged)
+    Q_PROPERTY(int telemetryServerPort READ telemetryServerPort NOTIFY telemetryServerListeningChanged)
     Q_PROPERTY(bool recording READ recording NOTIFY recordingChanged)
 
 public:
@@ -45,6 +48,8 @@ public:
 
     bool trackerRunning() const;
     QString trackingSourceMode() const;
+    bool telemetryServerListening() const;
+    int telemetryServerPort() const;
     bool recording() const;
 
     QImage currentImage() const;
@@ -58,6 +63,8 @@ public:
     Q_INVOKABLE void setLabTestingMode(bool enabled);
     Q_INVOKABLE void setTrackingSourceMode(const QString& mode);
     Q_INVOKABLE void ingestExternalTelemetry(double x, double y, double depthMm);
+    Q_INVOKABLE void startTelemetryServer(int port);
+    Q_INVOKABLE void stopTelemetryServer();
 
     Q_INVOKABLE void setTargetPoint(double x, double y);
     Q_INVOKABLE void setMeasurementStart(double x, double y);
@@ -80,11 +87,13 @@ signals:
     void sliceChanged();
     void trackerRunningChanged();
     void trackingSourceModeChanged();
+    void telemetryServerListeningChanged();
     void recordingChanged();
 
 private slots:
     void onTrackerSample(const surgiview::TrackerSample& sample);
     void onPlaybackSample(const surgiview::TrackerSample& sample);
+    void onTelemetryServerMessage(const QString& message);
 
 private:
     void applySample(const TrackerSample& sample);
@@ -92,6 +101,7 @@ private:
 
     DicomSeriesLoader m_loader;
     InstrumentTracker m_tracker;
+    TcpTelemetryServer m_telemetryServer;
     PlaybackRecorder m_recorder;
 
     QString m_statusMessage;

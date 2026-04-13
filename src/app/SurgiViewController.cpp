@@ -11,6 +11,10 @@ SurgiViewController::SurgiViewController(QObject* parent)
     connect(&m_tracker, &InstrumentTracker::runningChanged, this, &SurgiViewController::trackerRunningChanged);
     connect(&m_tracker, &InstrumentTracker::sourceModeChanged, this, &SurgiViewController::trackingSourceModeChanged);
 
+    connect(&m_telemetryServer, &TcpTelemetryServer::telemetryReceived, this, &SurgiViewController::ingestExternalTelemetry);
+    connect(&m_telemetryServer, &TcpTelemetryServer::serverMessage, this, &SurgiViewController::onTelemetryServerMessage);
+    connect(&m_telemetryServer, &TcpTelemetryServer::listeningChanged, this, &SurgiViewController::telemetryServerListeningChanged);
+
     connect(&m_recorder, &PlaybackRecorder::recordingChanged, this, &SurgiViewController::recordingChanged);
     connect(&m_recorder, &PlaybackRecorder::playbackSampleReady, this, &SurgiViewController::onPlaybackSample);
 
@@ -77,6 +81,16 @@ bool SurgiViewController::trackerRunning() const
 QString SurgiViewController::trackingSourceMode() const
 {
     return m_tracker.sourceMode();
+}
+
+bool SurgiViewController::telemetryServerListening() const
+{
+    return m_telemetryServer.isListening();
+}
+
+int SurgiViewController::telemetryServerPort() const
+{
+    return static_cast<int>(m_telemetryServer.port());
 }
 
 bool SurgiViewController::recording() const
@@ -162,6 +176,26 @@ void SurgiViewController::ingestExternalTelemetry(double x, double y, double dep
         m_statusMessage = QStringLiteral("External telemetry ingested");
         emit statusMessageChanged();
     }
+}
+
+void SurgiViewController::startTelemetryServer(int port)
+{
+    QString error;
+    if (!m_telemetryServer.start(static_cast<quint16>(port), &error)) {
+        m_statusMessage = QStringLiteral("Telemetry server start failed: %1").arg(error);
+        emit statusMessageChanged();
+        return;
+    }
+
+    m_statusMessage = QStringLiteral("Telemetry server listening on port %1").arg(m_telemetryServer.port());
+    emit statusMessageChanged();
+}
+
+void SurgiViewController::stopTelemetryServer()
+{
+    m_telemetryServer.stop();
+    m_statusMessage = QStringLiteral("Telemetry server stopped");
+    emit statusMessageChanged();
 }
 
 void SurgiViewController::setTargetPoint(double x, double y)
@@ -291,6 +325,12 @@ void SurgiViewController::refreshFrame()
 {
     ++m_frameRevision;
     emit frameUpdated();
+}
+
+void SurgiViewController::onTelemetryServerMessage(const QString& message)
+{
+    m_statusMessage = message;
+    emit statusMessageChanged();
 }
 
 } // namespace surgiview
