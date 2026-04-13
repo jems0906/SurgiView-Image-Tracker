@@ -105,6 +105,31 @@ ApplicationWindow {
                 }
             }
 
+            TextField {
+                id: serialPortName
+                Layout.preferredWidth: 100
+                text: surgiView.serialTelemetryOpen && surgiView.serialTelemetryPortName.length > 0 ? surgiView.serialTelemetryPortName : "COM3"
+                placeholderText: "COM port"
+            }
+
+            TextField {
+                id: serialBaudRate
+                Layout.preferredWidth: 110
+                text: surgiView.serialTelemetryOpen && surgiView.serialTelemetryBaudRate > 0 ? surgiView.serialTelemetryBaudRate.toString() : "115200"
+                placeholderText: "baud"
+            }
+
+            Button {
+                text: surgiView.serialTelemetryOpen ? "Stop Serial" : "Start Serial"
+                onClicked: {
+                    if (surgiView.serialTelemetryOpen) {
+                        surgiView.stopSerialTelemetry()
+                    } else {
+                        surgiView.startSerialTelemetry(serialPortName.text, parseInt(serialBaudRate.text))
+                    }
+                }
+            }
+
             Button {
                 text: surgiView.recording ? "Stop Recording" : "Start Recording"
                 onClicked: surgiView.recording ? surgiView.stopRecording() : surgiView.startRecording()

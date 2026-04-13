@@ -15,6 +15,10 @@ SurgiViewController::SurgiViewController(QObject* parent)
     connect(&m_telemetryServer, &TcpTelemetryServer::serverMessage, this, &SurgiViewController::onTelemetryServerMessage);
     connect(&m_telemetryServer, &TcpTelemetryServer::listeningChanged, this, &SurgiViewController::telemetryServerListeningChanged);
 
+    connect(&m_serialTelemetry, &SerialTelemetryDevice::telemetryReceived, this, &SurgiViewController::ingestExternalTelemetry);
+    connect(&m_serialTelemetry, &SerialTelemetryDevice::deviceMessage, this, &SurgiViewController::onSerialTelemetryMessage);
+    connect(&m_serialTelemetry, &SerialTelemetryDevice::openChanged, this, &SurgiViewController::serialTelemetryOpenChanged);
+
     connect(&m_recorder, &PlaybackRecorder::recordingChanged, this, &SurgiViewController::recordingChanged);
     connect(&m_recorder, &PlaybackRecorder::playbackSampleReady, this, &SurgiViewController::onPlaybackSample);
 
@@ -91,6 +95,21 @@ bool SurgiViewController::telemetryServerListening() const
 int SurgiViewController::telemetryServerPort() const
 {
     return static_cast<int>(m_telemetryServer.port());
+}
+
+bool SurgiViewController::serialTelemetryOpen() const
+{
+    return m_serialTelemetry.isOpen();
+}
+
+QString SurgiViewController::serialTelemetryPortName() const
+{
+    return m_serialTelemetry.portName();
+}
+
+int SurgiViewController::serialTelemetryBaudRate() const
+{
+    return static_cast<int>(m_serialTelemetry.baudRate());
 }
 
 bool SurgiViewController::recording() const
@@ -195,6 +214,26 @@ void SurgiViewController::stopTelemetryServer()
 {
     m_telemetryServer.stop();
     m_statusMessage = QStringLiteral("Telemetry server stopped");
+    emit statusMessageChanged();
+}
+
+void SurgiViewController::startSerialTelemetry(const QString& portName, int baudRate)
+{
+    QString error;
+    if (!m_serialTelemetry.start(portName, static_cast<qint32>(baudRate), &error)) {
+        m_statusMessage = QStringLiteral("Serial telemetry start failed: %1").arg(error);
+        emit statusMessageChanged();
+        return;
+    }
+
+    m_statusMessage = QStringLiteral("Serial telemetry opened on %1 @ %2 baud").arg(portName).arg(baudRate);
+    emit statusMessageChanged();
+}
+
+void SurgiViewController::stopSerialTelemetry()
+{
+    m_serialTelemetry.stop();
+    m_statusMessage = QStringLiteral("Serial telemetry stopped");
     emit statusMessageChanged();
 }
 
@@ -328,6 +367,12 @@ void SurgiViewController::refreshFrame()
 }
 
 void SurgiViewController::onTelemetryServerMessage(const QString& message)
+{
+    m_statusMessage = message;
+    emit statusMessageChanged();
+}
+
+void SurgiViewController::onSerialTelemetryMessage(const QString& message)
 {
     m_statusMessage = message;
     emit statusMessageChanged();

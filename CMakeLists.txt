@@ -11,7 +11,7 @@ set(CMAKE_AUTOUIC ON)
 option(SURGIVIEW_BUILD_TESTS "Build unit tests" ON)
 option(SURGIVIEW_ENABLE_DCMTK "Enable real DICOM decoding through DCMTK" OFF)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Quick QuickControls2 Multimedia Network Test)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Quick QuickControls2 Multimedia Network SerialPort Test)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -23,7 +23,9 @@ qt_add_executable(SurgiViewImageTracker
     src/imaging/DicomDecoder.cpp
     src/tracking/InstrumentTracker.cpp
     src/tracking/TrackingPoseSource.cpp
+    src/tracking/TelemetryJsonCodec.cpp
     src/tracking/TcpTelemetryServer.cpp
+    src/tracking/SerialTelemetryDevice.cpp
     src/measurement/DepthMeasurement.cpp
     src/recording/PlaybackRecorder.cpp
 )
@@ -38,6 +40,7 @@ target_link_libraries(SurgiViewImageTracker
         Qt6::QuickControls2
         Qt6::Multimedia
         Qt6::Network
+        Qt6::SerialPort
 )
 
 target_compile_definitions(SurgiViewImageTracker PRIVATE SURGIVIEW_HAS_DCMTK=0)
@@ -98,6 +101,7 @@ if(SURGIVIEW_BUILD_TESTS)
 
     qt_add_executable(SurgiViewTcpTelemetryServerTests
         tests/test_tcptelemetryserver.cpp
+        src/tracking/TelemetryJsonCodec.cpp
         src/tracking/TcpTelemetryServer.cpp
     )
 
@@ -110,7 +114,21 @@ if(SURGIVIEW_BUILD_TESTS)
             Qt6::Test
     )
 
+    qt_add_executable(SurgiViewTelemetryJsonCodecTests
+        tests/test_telemetryjsoncodec.cpp
+        src/tracking/TelemetryJsonCodec.cpp
+    )
+
+    target_include_directories(SurgiViewTelemetryJsonCodecTests PRIVATE src)
+
+    target_link_libraries(SurgiViewTelemetryJsonCodecTests
+        PRIVATE
+            Qt6::Core
+            Qt6::Test
+    )
+
     add_test(NAME SurgiViewDepthMeasurementTests COMMAND SurgiViewDepthMeasurementTests)
     add_test(NAME SurgiViewTrackerTests COMMAND SurgiViewTrackerTests)
     add_test(NAME SurgiViewTcpTelemetryServerTests COMMAND SurgiViewTcpTelemetryServerTests)
+    add_test(NAME SurgiViewTelemetryJsonCodecTests COMMAND SurgiViewTelemetryJsonCodecTests)
 endif()

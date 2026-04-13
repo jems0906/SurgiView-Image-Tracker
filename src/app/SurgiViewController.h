@@ -7,6 +7,7 @@
 #include "models/Types.h"
 #include "recording/PlaybackRecorder.h"
 #include "tracking/InstrumentTracker.h"
+#include "tracking/SerialTelemetryDevice.h"
 #include "tracking/TcpTelemetryServer.h"
 
 namespace surgiview {
@@ -27,6 +28,9 @@ class SurgiViewController : public QObject {
     Q_PROPERTY(QString trackingSourceMode READ trackingSourceMode NOTIFY trackingSourceModeChanged)
     Q_PROPERTY(bool telemetryServerListening READ telemetryServerListening NOTIFY telemetryServerListeningChanged)
     Q_PROPERTY(int telemetryServerPort READ telemetryServerPort NOTIFY telemetryServerListeningChanged)
+    Q_PROPERTY(bool serialTelemetryOpen READ serialTelemetryOpen NOTIFY serialTelemetryOpenChanged)
+    Q_PROPERTY(QString serialTelemetryPortName READ serialTelemetryPortName NOTIFY serialTelemetryOpenChanged)
+    Q_PROPERTY(int serialTelemetryBaudRate READ serialTelemetryBaudRate NOTIFY serialTelemetryOpenChanged)
     Q_PROPERTY(bool recording READ recording NOTIFY recordingChanged)
 
 public:
@@ -50,6 +54,9 @@ public:
     QString trackingSourceMode() const;
     bool telemetryServerListening() const;
     int telemetryServerPort() const;
+    bool serialTelemetryOpen() const;
+    QString serialTelemetryPortName() const;
+    int serialTelemetryBaudRate() const;
     bool recording() const;
 
     QImage currentImage() const;
@@ -65,6 +72,8 @@ public:
     Q_INVOKABLE void ingestExternalTelemetry(double x, double y, double depthMm);
     Q_INVOKABLE void startTelemetryServer(int port);
     Q_INVOKABLE void stopTelemetryServer();
+    Q_INVOKABLE void startSerialTelemetry(const QString& portName, int baudRate);
+    Q_INVOKABLE void stopSerialTelemetry();
 
     Q_INVOKABLE void setTargetPoint(double x, double y);
     Q_INVOKABLE void setMeasurementStart(double x, double y);
@@ -88,12 +97,14 @@ signals:
     void trackerRunningChanged();
     void trackingSourceModeChanged();
     void telemetryServerListeningChanged();
+    void serialTelemetryOpenChanged();
     void recordingChanged();
 
 private slots:
     void onTrackerSample(const surgiview::TrackerSample& sample);
     void onPlaybackSample(const surgiview::TrackerSample& sample);
     void onTelemetryServerMessage(const QString& message);
+    void onSerialTelemetryMessage(const QString& message);
 
 private:
     void applySample(const TrackerSample& sample);
@@ -102,6 +113,7 @@ private:
     DicomSeriesLoader m_loader;
     InstrumentTracker m_tracker;
     TcpTelemetryServer m_telemetryServer;
+    SerialTelemetryDevice m_serialTelemetry;
     PlaybackRecorder m_recorder;
 
     QString m_statusMessage;

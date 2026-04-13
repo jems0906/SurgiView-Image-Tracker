@@ -29,9 +29,9 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install aqtinstall
 
-      - name: Install Qt 6.5.3 (MinGW + Multimedia)
+      - name: Install Qt 6.5.3 (MinGW + Multimedia + SerialPort)
         run: |
-          python -m aqt install-qt windows desktop 6.5.3 win64_mingw -m qtmultimedia --outputdir C:/Qt
+          python -m aqt install-qt windows desktop 6.5.3 win64_mingw -m qtmultimedia qtserialport --outputdir C:/Qt
 
       - name: Install MinGW 13.1 and Ninja tools
         run: |

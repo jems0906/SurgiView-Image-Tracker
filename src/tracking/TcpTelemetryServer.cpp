@@ -1,9 +1,9 @@
 #include "tracking/TcpTelemetryServer.h"
 
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QTcpServer>
 #include <QTcpSocket>
+
+#include "tracking/TelemetryJsonCodec.h"
 
 namespace surgiview {
 
@@ -114,25 +114,16 @@ void TcpTelemetryServer::onSocketDisconnected()
 
 void TcpTelemetryServer::parseLine(const QByteArray& line)
 {
-    const QJsonDocument doc = QJsonDocument::fromJson(line);
-    if (!doc.isObject()) {
-        emit serverMessage(QStringLiteral("Invalid telemetry payload received"));
+    double x = 0.0;
+    double y = 0.0;
+    double depthMm = 0.0;
+    QString error;
+    if (!parseTelemetryJson(line, &x, &y, &depthMm, &error)) {
+        emit serverMessage(error);
         return;
     }
 
-    const QJsonObject obj = doc.object();
-    const QJsonValue xVal = obj.value(QStringLiteral("x"));
-    const QJsonValue yVal = obj.value(QStringLiteral("y"));
-    const QJsonValue depthVal = obj.contains(QStringLiteral("depthMm"))
-        ? obj.value(QStringLiteral("depthMm"))
-        : obj.value(QStringLiteral("depth"));
-
-    if (!xVal.isDouble() || !yVal.isDouble() || !depthVal.isDouble()) {
-        emit serverMessage(QStringLiteral("Telemetry payload missing numeric x/y/depth"));
-        return;
-    }
-
-    emit telemetryReceived(xVal.toDouble(), yVal.toDouble(), depthVal.toDouble());
+    emit telemetryReceived(x, y, depthMm);
 }
 
 } // namespace surgiview
