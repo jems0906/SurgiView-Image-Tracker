@@ -58,6 +58,8 @@ Preconfigured tasks are available in `.vscode/tasks.json`:
 - `SurgiView: Build`
 - `SurgiView: Test`
 - `SurgiView: Run`
+- `SurgiView: Demo Sender TCP`
+- `SurgiView: Demo Sender Serial`
 - `SurgiView: Full Pipeline`
 
 ## CI pipeline
@@ -129,6 +131,28 @@ The app now also includes TCP and serial telemetry listeners for live adapter in
 ```
 
 The same newline-delimited JSON payload format is accepted over both TCP and serial transports.
+
+## Demo sender utility
+
+For live demos, use `scripts/send_demo_telemetry.py` to stream realistic motion data into SurgiView.
+
+TCP example:
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\send_demo_telemetry.py --mode tcp --host 127.0.0.1 --port 45454 --count 300
+```
+
+Serial example:
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\send_demo_telemetry.py --mode serial --serial-port COM3 --baud-rate 115200 --count 300
+```
+
+If serial mode is needed in a fresh environment, install the demo dependency first:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r .\scripts\requirements-demo.txt
+```
 
 Current branch implementation includes an in-process external telemetry adapter stub so robotics/camera drivers can be integrated without changing overlay, measurement, or recording pipelines.
 
