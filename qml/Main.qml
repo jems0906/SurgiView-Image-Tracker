@@ -80,6 +80,13 @@ ApplicationWindow {
                 onToggled: surgiView.setLabTestingMode(checked)
             }
 
+            ComboBox {
+                id: sourceModeBox
+                model: ["simulated", "external"]
+                currentIndex: surgiView.trackingSourceMode === "external" ? 1 : 0
+                onActivated: surgiView.setTrackingSourceMode(currentText)
+            }
+
             Button {
                 text: surgiView.recording ? "Stop Recording" : "Start Recording"
                 onClicked: surgiView.recording ? surgiView.stopRecording() : surgiView.startRecording()
@@ -93,6 +100,34 @@ ApplicationWindow {
             Button {
                 text: "Pause"
                 onClicked: surgiView.pausePlayback()
+            }
+
+            TextField {
+                id: extX
+                Layout.preferredWidth: 90
+                text: "220"
+                placeholderText: "tool x"
+            }
+
+            TextField {
+                id: extY
+                Layout.preferredWidth: 90
+                text: "170"
+                placeholderText: "tool y"
+            }
+
+            TextField {
+                id: extDepth
+                Layout.preferredWidth: 90
+                text: "10.5"
+                placeholderText: "depth"
+            }
+
+            Button {
+                text: "Inject Telemetry"
+                onClicked: {
+                    surgiView.ingestExternalTelemetry(parseFloat(extX.text), parseFloat(extY.text), parseFloat(extDepth.text))
+                }
             }
         }
 

@@ -9,6 +9,7 @@ SurgiViewController::SurgiViewController(QObject* parent)
 {
     connect(&m_tracker, &InstrumentTracker::sampleReady, this, &SurgiViewController::onTrackerSample);
     connect(&m_tracker, &InstrumentTracker::runningChanged, this, &SurgiViewController::trackerRunningChanged);
+    connect(&m_tracker, &InstrumentTracker::sourceModeChanged, this, &SurgiViewController::trackingSourceModeChanged);
 
     connect(&m_recorder, &PlaybackRecorder::recordingChanged, this, &SurgiViewController::recordingChanged);
     connect(&m_recorder, &PlaybackRecorder::playbackSampleReady, this, &SurgiViewController::onPlaybackSample);
@@ -71,6 +72,11 @@ int SurgiViewController::totalSlices() const
 bool SurgiViewController::trackerRunning() const
 {
     return m_tracker.running();
+}
+
+QString SurgiViewController::trackingSourceMode() const
+{
+    return m_tracker.sourceMode();
 }
 
 bool SurgiViewController::recording() const
@@ -140,6 +146,22 @@ void SurgiViewController::setLabTestingMode(bool enabled)
         ? QStringLiteral("Lab testing mode: simulated C-arm drift enabled")
         : QStringLiteral("Lab testing mode disabled");
     emit statusMessageChanged();
+}
+
+void SurgiViewController::setTrackingSourceMode(const QString& mode)
+{
+    m_tracker.setSourceMode(mode);
+    m_statusMessage = QStringLiteral("Tracking source mode: %1").arg(m_tracker.sourceMode());
+    emit statusMessageChanged();
+}
+
+void SurgiViewController::ingestExternalTelemetry(double x, double y, double depthMm)
+{
+    m_tracker.ingestExternalTelemetry(x, y, depthMm);
+    if (m_tracker.sourceMode() == QStringLiteral("external")) {
+        m_statusMessage = QStringLiteral("External telemetry ingested");
+        emit statusMessageChanged();
+    }
 }
 
 void SurgiViewController::setTargetPoint(double x, double y)

@@ -9,9 +9,12 @@ namespace surgiview {
 
 InstrumentTracker::InstrumentTracker(QObject* parent)
     : QObject(parent)
+    , m_simulatedSource(std::make_unique<SimulatedPoseSource>())
+    , m_externalSource(std::make_unique<ExternalTelemetryPoseSource>())
 {
     m_timer.setInterval(40);
     connect(&m_timer, &QTimer::timeout, this, &InstrumentTracker::onTick);
+    m_simulatedSource->setLabTestingMode(m_labTestingMode);
 }
 
 bool InstrumentTracker::running() const
@@ -24,18 +27,46 @@ bool InstrumentTracker::labTestingMode() const
     return m_labTestingMode;
 }
 
+QString InstrumentTracker::sourceMode() const
+{
+    return m_sourceMode == SourceMode::Simulated
+        ? QStringLiteral("simulated")
+        : QStringLiteral("external");
+}
+
 void InstrumentTracker::setLabTestingMode(bool enabled)
 {
     if (m_labTestingMode == enabled) {
         return;
     }
     m_labTestingMode = enabled;
+    m_simulatedSource->setLabTestingMode(enabled);
     emit labTestingModeChanged();
 }
 
 void InstrumentTracker::setTarget(const QPointF& p)
 {
     m_target = p;
+}
+
+void InstrumentTracker::setSourceMode(const QString& mode)
+{
+    SourceMode nextMode = SourceMode::Simulated;
+    if (mode.compare(QStringLiteral("external"), Qt::CaseInsensitive) == 0) {
+        nextMode = SourceMode::ExternalTelemetry;
+    }
+
+    if (m_sourceMode == nextMode) {
+        return;
+    }
+
+    m_sourceMode = nextMode;
+    emit sourceModeChanged();
+}
+
+void InstrumentTracker::ingestExternalTelemetry(double x, double y, double depthMm)
+{
+    m_externalSource->ingest(x, y, depthMm);
 }
 
 void InstrumentTracker::start()
@@ -60,30 +91,21 @@ void InstrumentTracker::stop()
 
 void InstrumentTracker::onTick()
 {
-    // Simulate marker drift and instrument movement for lab/C-arm testing mode.
-    const double driftFactor = m_labTestingMode ? 1.4 : 1.0;
+    PoseFrame frame;
+    const bool hasFrame = (m_sourceMode == SourceMode::Simulated)
+        ? m_simulatedSource->poll(&frame)
+        : m_externalSource->poll(&frame);
 
-    m_toolTip.rx() += m_velocity.x() * driftFactor;
-    m_toolTip.ry() += m_velocity.y() * driftFactor;
-
-    if (m_toolTip.x() < 10.0 || m_toolTip.x() > 620.0) {
-        m_velocity.rx() = -m_velocity.x();
-    }
-    if (m_toolTip.y() < 10.0 || m_toolTip.y() > 470.0) {
-        m_velocity.ry() = -m_velocity.y();
-    }
-
-    m_depthMm += 0.12 * driftFactor;
-    if (m_depthMm > 85.0) {
-        m_depthMm = 0.0;
+    if (!hasFrame) {
+        return;
     }
 
     TrackerSample sample;
     sample.timestampMs = QDateTime::currentMSecsSinceEpoch();
-    sample.toolTip = m_toolTip;
+    sample.toolTip = frame.toolTip;
     sample.target = m_target;
-    sample.depthMm = m_depthMm;
-    sample.alignmentErrorPx = DepthMeasurement::distancePx(m_toolTip, m_target);
+    sample.depthMm = frame.depthMm;
+    sample.alignmentErrorPx = DepthMeasurement::distancePx(frame.toolTip, m_target);
 
     emit sampleReady(sample);
 }
