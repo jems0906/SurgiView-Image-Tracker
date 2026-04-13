@@ -9,6 +9,8 @@ Show SurgiView as a desktop medical imaging prototype with image loading, tracki
 - CT slice folder: `sample-data/demo_ct_series`
 - Session replay file: `sample-data/demo_session.json`
 - Live sender: `scripts/send_demo_telemetry.py`
+- Evaluator guide: `docs/demo/evaluator-guide.md`
+- Bundle script: `scripts/package_demo_bundle.ps1`
 
 ## Recommended demo flow
 
@@ -32,3 +34,11 @@ Show SurgiView as a desktop medical imaging prototype with image loading, tracki
 - Safety-oriented artifacts in `docs/safety/`
 - Automated build/test and demo sender utilities
 - External transport abstraction for future robotics/camera integration
+
+## Packaging note
+
+To hand the demo to another evaluator, generate the packaged bundle with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\package_demo_bundle.ps1
+```

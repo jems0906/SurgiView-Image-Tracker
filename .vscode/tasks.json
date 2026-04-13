@@ -93,6 +93,18 @@
       "problemMatcher": []
     },
     {
+      "label": "SurgiView: Package Demo Bundle",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/scripts/package_demo_bundle.ps1"
+      ],
+      "problemMatcher": []
+    },
+    {
       "label": "SurgiView: Full Pipeline",
       "type": "shell",
       "command": "powershell",

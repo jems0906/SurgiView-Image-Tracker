@@ -61,6 +61,7 @@ Preconfigured tasks are available in `.vscode/tasks.json`:
 - `SurgiView: Demo Walkthrough`
 - `SurgiView: Demo Sender TCP`
 - `SurgiView: Demo Sender Serial`
+- `SurgiView: Package Demo Bundle`
 - `SurgiView: Full Pipeline`
 
 ## CI pipeline
@@ -162,12 +163,20 @@ Portfolio/demo assets are included in the repository:
 - Sample slice folder: `sample-data/demo_ct_series`
 - Sample replay session: `sample-data/demo_session.json`
 - Demo walkthrough: `docs/demo/walkthrough.md`
+- Evaluator guide: `docs/demo/evaluator-guide.md`
 - Demo helper script: `scripts/start_demo.ps1`
+- Demo packaging script: `scripts/package_demo_bundle.ps1`
 
 To print the recommended walkthrough steps and launch the app:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\start_demo.ps1
+```
+
+To create a distributable demo bundle in `dist/`:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\package_demo_bundle.ps1
 ```
 
 Current branch implementation includes an in-process external telemetry adapter stub so robotics/camera drivers can be integrated without changing overlay, measurement, or recording pipelines.
