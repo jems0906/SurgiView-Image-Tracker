@@ -10,6 +10,8 @@ Show SurgiView as a desktop medical imaging prototype with image loading, tracki
 - Session replay file: `sample-data/demo_session.json`
 - Live sender: `scripts/send_demo_telemetry.py`
 - Evaluator guide: `docs/demo/evaluator-guide.md`
+- Release note: `docs/demo/release-note-v1.md`
+- Portfolio summary: `docs/demo/portfolio-summary.md`
 - Bundle script: `scripts/package_demo_bundle.ps1`
 
 ## Recommended demo flow
@@ -42,3 +44,5 @@ To hand the demo to another evaluator, generate the packaged bundle with:
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\package_demo_bundle.ps1
 ```
+
+If the goal is an interview or portfolio review, pair the walkthrough with the release note and portfolio summary first.

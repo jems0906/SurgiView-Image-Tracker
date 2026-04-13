@@ -164,6 +164,8 @@ Portfolio/demo assets are included in the repository:
 - Sample replay session: `sample-data/demo_session.json`
 - Demo walkthrough: `docs/demo/walkthrough.md`
 - Evaluator guide: `docs/demo/evaluator-guide.md`
+- Release note: `docs/demo/release-note-v1.md`
+- Portfolio summary: `docs/demo/portfolio-summary.md`
 - Demo helper script: `scripts/start_demo.ps1`
 - Demo packaging script: `scripts/package_demo_bundle.ps1`
 
@@ -178,6 +180,12 @@ To create a distributable demo bundle in `dist/`:
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\package_demo_bundle.ps1
 ```
+
+For reviewer handoff or interview prep, start with:
+
+- `docs/demo/release-note-v1.md`
+- `docs/demo/portfolio-summary.md`
+- `docs/demo/evaluator-guide.md`
 
 Current branch implementation includes an in-process external telemetry adapter stub so robotics/camera drivers can be integrated without changing overlay, measurement, or recording pipelines.
 
