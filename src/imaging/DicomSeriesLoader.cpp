@@ -1,5 +1,7 @@
 #include "imaging/DicomSeriesLoader.h"
 
+#include "imaging/DicomDecoder.h"
+
 #include <QDir>
 #include <QFileInfo>
 #include <QImageReader>
@@ -87,7 +89,17 @@ SliceFrame DicomSeriesLoader::readFrameFile(const QString& filePath) const
     frame.sourceName = QFileInfo(filePath).fileName();
 
     if (filePath.endsWith(QStringLiteral(".dcm"), Qt::CaseInsensitive)) {
-        // Placeholder grayscale frame for basic DICOM simulation mode.
+        QString decodeError;
+        QImage decoded;
+        double spacingMm = 0.25;
+
+        if (decodeDicomFrame(filePath, &decoded, &spacingMm, &decodeError)) {
+            frame.image = decoded;
+            frame.pixelSpacingMm = spacingMm;
+            return frame;
+        }
+
+        // Keep simulation fallback if DCMTK is unavailable or decoding fails.
         QImage simulated(640, 480, QImage::Format_Grayscale8);
         for (int y = 0; y < simulated.height(); ++y) {
             uchar* row = simulated.scanLine(y);

@@ -9,6 +9,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 option(SURGIVIEW_BUILD_TESTS "Build unit tests" ON)
+option(SURGIVIEW_ENABLE_DCMTK "Enable real DICOM decoding through DCMTK" OFF)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Quick QuickControls2 Multimedia Test)
 
@@ -19,6 +20,7 @@ qt_add_executable(SurgiViewImageTracker
     src/app/SurgiViewController.cpp
     src/app/FrameImageProvider.cpp
     src/imaging/DicomSeriesLoader.cpp
+    src/imaging/DicomDecoder.cpp
     src/tracking/InstrumentTracker.cpp
     src/measurement/DepthMeasurement.cpp
     src/recording/PlaybackRecorder.cpp
@@ -34,6 +36,22 @@ target_link_libraries(SurgiViewImageTracker
         Qt6::QuickControls2
         Qt6::Multimedia
 )
+
+target_compile_definitions(SurgiViewImageTracker PRIVATE SURGIVIEW_HAS_DCMTK=0)
+
+if(SURGIVIEW_ENABLE_DCMTK)
+    find_package(DCMTK REQUIRED)
+    target_compile_definitions(SurgiViewImageTracker PRIVATE SURGIVIEW_HAS_DCMTK=1)
+
+    if(TARGET DCMTK::DCMTK)
+        target_link_libraries(SurgiViewImageTracker PRIVATE DCMTK::DCMTK)
+    elseif(DCMTK_LIBRARIES)
+        target_include_directories(SurgiViewImageTracker PRIVATE ${DCMTK_INCLUDE_DIRS})
+        target_link_libraries(SurgiViewImageTracker PRIVATE ${DCMTK_LIBRARIES})
+    else()
+        message(FATAL_ERROR "DCMTK found but no linkable target or libraries were provided")
+    endif()
+endif()
 
 qt_add_qml_module(SurgiViewImageTracker
     URI SurgiView
