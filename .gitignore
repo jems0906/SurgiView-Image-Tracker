@@ -1,7 +1,8 @@
 build/
 out/
 .vs/
-.vscode/
+.vscode/*
+!.vscode/tasks.json
 *.user
 *.suo
 *.VC.db

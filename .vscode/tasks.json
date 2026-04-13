@@ -1,0 +1,101 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "SurgiView: Configure",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/run.ps1",
+        "-Configure"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "SurgiView: Build",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/run.ps1",
+        "-Build"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "SurgiView: Test",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/run.ps1",
+        "-Test"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "SurgiView: Run",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/run.ps1",
+        "-Run"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "SurgiView: Demo Sender TCP",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "& .\\.venv\\Scripts\\python.exe .\\scripts\\send_demo_telemetry.py --mode tcp --host 127.0.0.1 --port 45454 --count 300"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "SurgiView: Demo Sender Serial",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "& .\\.venv\\Scripts\\python.exe .\\scripts\\send_demo_telemetry.py --mode serial --serial-port COM3 --baud-rate 115200 --count 300"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "SurgiView: Full Pipeline",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/run.ps1",
+        "-All"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}
