@@ -81,6 +81,18 @@ The pipeline runs on Windows and performs:
 
 This project includes a lightweight `.dcm` placeholder loader for rapid prototyping and simulation. For production-grade DICOM parsing/rendering, integrate DCMTK or GDCM and route decoded pixel data into `DicomSeriesLoader`.
 
+Optional DCMTK integration scaffold is available now.
+
+- CMake option: `SURGIVIEW_ENABLE_DCMTK=ON`
+- Build example:
+
+```powershell
+cmake -S . -B build -G Ninja -DSURGIVIEW_ENABLE_DCMTK=ON
+cmake --build build -j 2
+```
+
+When DCMTK is disabled or decoding fails, `.dcm` loading falls back to the existing simulated grayscale frame.
+
 ## Notes on video export
 
 `Export Video` renders annotated PNG frames and then invokes `ffmpeg` from PATH to produce MP4. If ffmpeg is unavailable, frames are still exported and the status message explains what is missing.
