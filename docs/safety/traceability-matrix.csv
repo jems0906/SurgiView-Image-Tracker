@@ -1,0 +1,9 @@
+RequirementID,Requirement,HazardID,RiskControl,Implementation,Verification
+SV-REQ-001,Display current slice with clear index,H-004,Show current slice and total slice count,UI labels in SurgiViewController/QML,Manual bench verification VP-001
+SV-REQ-002,Show tool tip and target overlay,H-001,Compute and display alignment error,InstrumentTracker plus overlay rendering,Unit test plus bench verification VP-002
+SV-REQ-003,Measure distance in px and mm,H-002,Centralize measurement calculation and show both units,DepthMeasurement and UI labels,Unit test TV-001 and bench verification VP-003
+SV-REQ-004,Record and replay tracking session,H-005,Status-driven save/load/playback behavior,PlaybackRecorder,Manual verification VP-004
+SV-REQ-005,Export annotated evidence,H-005,Frame export and video export result reporting,PlaybackRecorder export methods,Manual verification VP-005
+SV-REQ-006,Separate simulated and external tracking modes,H-006;H-003,Explicit source mode selection and external telemetry path,InstrumentTracker source mode architecture,Unit test TV-002 and bench verification VP-006
+SV-REQ-007,Fallback when DICOM decode unavailable,H-007,Graceful simulation fallback path,DicomSeriesLoader and optional DicomDecoder,Manual verification VP-007
+SV-REQ-008,Support automated regression verification,H-001;H-002;H-005,Run tests in CI on every push,GitHub Actions CI plus Qt tests,CI workflow run
