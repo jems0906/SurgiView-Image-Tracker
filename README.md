@@ -77,6 +77,16 @@ The pipeline runs on Windows and performs:
 - `feature/tracker-hardware-adapter`
 - `feature/iec62304-safety-artifacts`
 
+## Safety artifacts
+
+IEC 62304-style starter artifacts are available under `docs/safety/`:
+
+- `docs/safety/README.md`
+- `docs/safety/hazard-analysis.md`
+- `docs/safety/traceability-matrix.csv`
+- `docs/safety/verification-protocol.md`
+- `docs/safety/release-checklist.md`
+
 ## Notes on DICOM
 
 This project includes a lightweight `.dcm` placeholder loader for rapid prototyping and simulation. For production-grade DICOM parsing/rendering, integrate DCMTK or GDCM and route decoded pixel data into `DicomSeriesLoader`.
@@ -89,5 +99,5 @@ This project includes a lightweight `.dcm` placeholder loader for rapid prototyp
 
 1. Integrate true DICOM decoding (window/level, metadata validation).
 2. Replace simulated tracker with camera/robotics telemetry adapter.
-3. Add IEC 62304-style verification artifacts and traceability matrix.
+3. Execute and sign off the safety artifacts in `docs/safety/` with real evidence.
 4. Add persistent case/session model with audit logging.
