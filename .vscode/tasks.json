@@ -81,6 +81,18 @@
       "problemMatcher": []
     },
     {
+      "label": "SurgiView: Demo Walkthrough",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/scripts/start_demo.ps1"
+      ],
+      "problemMatcher": []
+    },
+    {
       "label": "SurgiView: Full Pipeline",
       "type": "shell",
       "command": "powershell",

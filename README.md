@@ -58,6 +58,7 @@ Preconfigured tasks are available in `.vscode/tasks.json`:
 - `SurgiView: Build`
 - `SurgiView: Test`
 - `SurgiView: Run`
+- `SurgiView: Demo Walkthrough`
 - `SurgiView: Demo Sender TCP`
 - `SurgiView: Demo Sender Serial`
 - `SurgiView: Full Pipeline`
@@ -152,6 +153,21 @@ If serial mode is needed in a fresh environment, install the demo dependency fir
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -r .\scripts\requirements-demo.txt
+```
+
+## Demo package
+
+Portfolio/demo assets are included in the repository:
+
+- Sample slice folder: `sample-data/demo_ct_series`
+- Sample replay session: `sample-data/demo_session.json`
+- Demo walkthrough: `docs/demo/walkthrough.md`
+- Demo helper script: `scripts/start_demo.ps1`
+
+To print the recommended walkthrough steps and launch the app:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\start_demo.ps1
 ```
 
 Current branch implementation includes an in-process external telemetry adapter stub so robotics/camera drivers can be integrated without changing overlay, measurement, or recording pipelines.

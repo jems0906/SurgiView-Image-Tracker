@@ -1,0 +1,49 @@
+{
+  "samples": [
+    {
+      "timestampMs": 1713000000000,
+      "toolX": 180.0,
+      "toolY": 140.0,
+      "targetX": 300.0,
+      "targetY": 220.0,
+      "depthMm": 8.5,
+      "alignmentErrorPx": 144.22
+    },
+    {
+      "timestampMs": 1713000000040,
+      "toolX": 194.0,
+      "toolY": 148.0,
+      "targetX": 300.0,
+      "targetY": 220.0,
+      "depthMm": 9.1,
+      "alignmentErrorPx": 128.14
+    },
+    {
+      "timestampMs": 1713000000080,
+      "toolX": 208.0,
+      "toolY": 156.0,
+      "targetX": 300.0,
+      "targetY": 220.0,
+      "depthMm": 9.8,
+      "alignmentErrorPx": 112.07
+    },
+    {
+      "timestampMs": 1713000000120,
+      "toolX": 224.0,
+      "toolY": 166.0,
+      "targetX": 300.0,
+      "targetY": 220.0,
+      "depthMm": 10.4,
+      "alignmentErrorPx": 93.23
+    },
+    {
+      "timestampMs": 1713000000160,
+      "toolX": 242.0,
+      "toolY": 178.0,
+      "targetX": 300.0,
+      "targetY": 220.0,
+      "depthMm": 11.0,
+      "alignmentErrorPx": 71.61
+    }
+  ]
+}
