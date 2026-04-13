@@ -97,6 +97,17 @@ When DCMTK is disabled or decoding fails, `.dcm` loading falls back to the exist
 
 `Export Video` renders annotated PNG frames and then invokes `ffmpeg` from PATH to produce MP4. If ffmpeg is unavailable, frames are still exported and the status message explains what is missing.
 
+## Tracking hardware adapter scaffold
+
+Tracking now supports two source modes:
+
+- `simulated`: internal lab-mode trajectory simulation.
+- `external`: expects telemetry from a hardware adapter feed.
+
+External mode is available through `SurgiViewController::setTrackingSourceMode("external")` and `SurgiViewController::ingestExternalTelemetry(x, y, depthMm)`.
+
+Current branch implementation includes an in-process external telemetry adapter stub so robotics/camera drivers can be integrated without changing overlay, measurement, or recording pipelines.
+
 ## Suggested next steps for cadaver/lab readiness
 
 1. Integrate true DICOM decoding (window/level, metadata validation).

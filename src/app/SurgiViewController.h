@@ -23,6 +23,7 @@ class SurgiViewController : public QObject {
     Q_PROPERTY(int currentSliceIndex READ currentSliceIndex NOTIFY sliceChanged)
     Q_PROPERTY(int totalSlices READ totalSlices NOTIFY sliceChanged)
     Q_PROPERTY(bool trackerRunning READ trackerRunning NOTIFY trackerRunningChanged)
+    Q_PROPERTY(QString trackingSourceMode READ trackingSourceMode NOTIFY trackingSourceModeChanged)
     Q_PROPERTY(bool recording READ recording NOTIFY recordingChanged)
 
 public:
@@ -43,6 +44,7 @@ public:
     int totalSlices() const;
 
     bool trackerRunning() const;
+    QString trackingSourceMode() const;
     bool recording() const;
 
     QImage currentImage() const;
@@ -54,6 +56,8 @@ public:
     Q_INVOKABLE void startTracking();
     Q_INVOKABLE void stopTracking();
     Q_INVOKABLE void setLabTestingMode(bool enabled);
+    Q_INVOKABLE void setTrackingSourceMode(const QString& mode);
+    Q_INVOKABLE void ingestExternalTelemetry(double x, double y, double depthMm);
 
     Q_INVOKABLE void setTargetPoint(double x, double y);
     Q_INVOKABLE void setMeasurementStart(double x, double y);
@@ -75,6 +79,7 @@ signals:
     void measurementChanged();
     void sliceChanged();
     void trackerRunningChanged();
+    void trackingSourceModeChanged();
     void recordingChanged();
 
 private slots:

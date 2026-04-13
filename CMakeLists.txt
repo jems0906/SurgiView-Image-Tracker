@@ -22,6 +22,7 @@ qt_add_executable(SurgiViewImageTracker
     src/imaging/DicomSeriesLoader.cpp
     src/imaging/DicomDecoder.cpp
     src/tracking/InstrumentTracker.cpp
+    src/tracking/TrackingPoseSource.cpp
     src/measurement/DepthMeasurement.cpp
     src/recording/PlaybackRecorder.cpp
 )
@@ -80,6 +81,7 @@ if(SURGIVIEW_BUILD_TESTS)
     qt_add_executable(SurgiViewTrackerTests
         tests/test_tracker.cpp
         src/tracking/InstrumentTracker.cpp
+        src/tracking/TrackingPoseSource.cpp
         src/measurement/DepthMeasurement.cpp
     )
 
