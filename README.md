@@ -60,6 +60,23 @@ Preconfigured tasks are available in `.vscode/tasks.json`:
 - `SurgiView: Run`
 - `SurgiView: Full Pipeline`
 
+## CI pipeline
+
+GitHub Actions workflow is defined in `.github/workflows/ci.yml`.
+
+The pipeline runs on Windows and performs:
+
+- Qt + MinGW toolchain provisioning via `aqtinstall`
+- CMake configure with Ninja
+- Build
+- Unit tests (`ctest`)
+
+## Suggested feature branches
+
+- `feature/dicom-dcmtk-integration`
+- `feature/tracker-hardware-adapter`
+- `feature/iec62304-safety-artifacts`
+
 ## Notes on DICOM
 
 This project includes a lightweight `.dcm` placeholder loader for rapid prototyping and simulation. For production-grade DICOM parsing/rendering, integrate DCMTK or GDCM and route decoded pixel data into `DicomSeriesLoader`.
