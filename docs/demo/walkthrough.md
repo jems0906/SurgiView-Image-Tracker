@@ -12,6 +12,7 @@ Show SurgiView as a desktop medical imaging prototype with image loading, tracki
 - Evaluator guide: `docs/demo/evaluator-guide.md`
 - Release note: `docs/demo/release-note-v1.md`
 - Portfolio summary: `docs/demo/portfolio-summary.md`
+- Requirement checklist: `docs/demo/requirements-checklist.md`
 - Bundle script: `scripts/package_demo_bundle.ps1`
 
 ## Recommended demo flow

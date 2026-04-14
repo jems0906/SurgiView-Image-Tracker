@@ -99,7 +99,7 @@ SliceFrame DicomSeriesLoader::readFrameFile(const QString& filePath) const
             return frame;
         }
 
-        // Keep simulation fallback if DCMTK is unavailable or decoding fails.
+        // Keep a visible fallback if the DICOM file is unsupported or malformed.
         QImage simulated(640, 480, QImage::Format_Grayscale8);
         for (int y = 0; y < simulated.height(); ++y) {
             uchar* row = simulated.scanLine(y);

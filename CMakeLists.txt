@@ -127,8 +127,25 @@ if(SURGIVIEW_BUILD_TESTS)
             Qt6::Test
     )
 
+    qt_add_executable(SurgiViewDicomDecoderTests
+        tests/test_dicomdecoder.cpp
+        src/imaging/DicomDecoder.cpp
+    )
+
+    target_include_directories(SurgiViewDicomDecoderTests PRIVATE src)
+
+    target_link_libraries(SurgiViewDicomDecoderTests
+        PRIVATE
+            Qt6::Core
+            Qt6::Gui
+            Qt6::Test
+    )
+
+    target_compile_definitions(SurgiViewDicomDecoderTests PRIVATE SURGIVIEW_HAS_DCMTK=0)
+
     add_test(NAME SurgiViewDepthMeasurementTests COMMAND SurgiViewDepthMeasurementTests)
     add_test(NAME SurgiViewTrackerTests COMMAND SurgiViewTrackerTests)
     add_test(NAME SurgiViewTcpTelemetryServerTests COMMAND SurgiViewTcpTelemetryServerTests)
     add_test(NAME SurgiViewTelemetryJsonCodecTests COMMAND SurgiViewTelemetryJsonCodecTests)
+    add_test(NAME SurgiViewDicomDecoderTests COMMAND SurgiViewDicomDecoderTests)
 endif()

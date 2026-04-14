@@ -4,14 +4,14 @@ SurgiView Image Tracker is a Qt/QML desktop application for simulated medical im
 
 ## Implemented capabilities
 
-- Load X-ray/CT slices from a folder (`.png`, `.jpg`, `.bmp`, `.dcm` placeholder support)
+- Load X-ray/CT slices from a folder (`.png`, `.jpg`, `.bmp`, baseline `.dcm` support)
 - Simulated instrument tracking (fiducial/AR-style marker stream)
 - Real-time alignment overlay (tool tip vs. target anatomy)
 - Depth measurement tools (pixel and mm scale)
 - Recording and playback of tracking sessions
 - Annotated frame and video export (PNG sequence + ffmpeg MP4)
 - Lab testing mode with simulated C-arm drift
-- Unit tests (Qt Test) for measurement and tracking behavior
+- Unit tests (Qt Test) for measurement, tracking, telemetry, and baseline DICOM decoding
 
 ## Build requirements
 
@@ -93,7 +93,13 @@ IEC 62304-style starter artifacts are available under `docs/safety/`:
 
 ## Notes on DICOM
 
-This project includes a lightweight `.dcm` placeholder loader for rapid prototyping and simulation. For production-grade DICOM parsing/rendering, integrate DCMTK or GDCM and route decoded pixel data into `DicomSeriesLoader`.
+This project includes a built-in baseline DICOM decoder for common uncompressed grayscale studies using Explicit VR Little Endian transfer syntax. It supports:
+
+- Monochrome 8-bit and 16-bit pixel data
+- Pixel spacing extraction
+- MONOCHROME1 and MONOCHROME2 presentation
+- Basic window center and window width handling
+- Rescale slope and intercept application
 
 Optional DCMTK integration scaffold is available now.
 
@@ -105,7 +111,7 @@ cmake -S . -B build -G Ninja -DSURGIVIEW_ENABLE_DCMTK=ON
 cmake --build build -j 2
 ```
 
-When DCMTK is disabled or decoding fails, `.dcm` loading falls back to the existing simulated grayscale frame.
+When DCMTK is disabled, the built-in decoder is used first. If a DICOM file is unsupported or malformed, loading falls back to the existing simulated grayscale frame so the demo remains operable.
 
 ## Notes on video export
 
@@ -166,6 +172,7 @@ Portfolio/demo assets are included in the repository:
 - Evaluator guide: `docs/demo/evaluator-guide.md`
 - Release note: `docs/demo/release-note-v1.md`
 - Portfolio summary: `docs/demo/portfolio-summary.md`
+- Requirement checklist: `docs/demo/requirements-checklist.md`
 - Demo helper script: `scripts/start_demo.ps1`
 - Demo packaging script: `scripts/package_demo_bundle.ps1`
 
@@ -186,6 +193,7 @@ For reviewer handoff or interview prep, start with:
 - `docs/demo/release-note-v1.md`
 - `docs/demo/portfolio-summary.md`
 - `docs/demo/evaluator-guide.md`
+- `docs/demo/requirements-checklist.md`
 
 Current branch implementation includes an in-process external telemetry adapter stub so robotics/camera drivers can be integrated without changing overlay, measurement, or recording pipelines.
 
