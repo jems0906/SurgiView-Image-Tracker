@@ -172,6 +172,7 @@ Portfolio/demo assets are included in the repository:
 - Evaluator guide: `docs/demo/evaluator-guide.md`
 - Release note: `docs/demo/release-note-v1.md`
 - GitHub release draft: `docs/demo/github-release-description.md`
+- GitHub metadata draft: `docs/demo/github-metadata.md`
 - Portfolio summary: `docs/demo/portfolio-summary.md`
 - Requirement checklist: `docs/demo/requirements-checklist.md`
 - Demo helper script: `scripts/start_demo.ps1`
