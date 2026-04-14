@@ -9,6 +9,10 @@ on:
 jobs:
   build-and-test-windows:
     runs-on: windows-latest
+    env:
+      QT_PREFIX: C:/Qt/6.5.3/mingw_64
+      MINGW_BIN: C:/qt-tools/Tools/mingw1310_64/bin
+      NINJA_BIN: C:/Qt/Tools/Ninja
     defaults:
       run:
         shell: pwsh
@@ -38,18 +42,22 @@ jobs:
           python -m aqt install-tool windows desktop tools_mingw1310 qt.tools.win64_mingw1310 --outputdir C:/qt-tools
           python -m aqt install-tool windows desktop tools_ninja qt.tools.ninja --outputdir C:/Qt
 
+      - name: Export toolchain paths
+        run: |
+          "$env:MINGW_BIN" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          "$env:QT_PREFIX/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          "$env:NINJA_BIN" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
       - name: Configure
-        env:
-          CMAKE_PREFIX_PATH: C:/Qt/6.5.3/mingw_64
         run: |
           cmake -S . -B build -G Ninja `
-            -DCMAKE_PREFIX_PATH="$env:CMAKE_PREFIX_PATH" `
-            -DCMAKE_C_COMPILER="C:/qt-tools/Tools/mingw1310_64/bin/gcc.exe" `
-            -DCMAKE_CXX_COMPILER="C:/qt-tools/Tools/mingw1310_64/bin/g++.exe" `
-            -DCMAKE_MAKE_PROGRAM="C:/Qt/Tools/Ninja/ninja.exe"
+            -DCMAKE_PREFIX_PATH="$env:QT_PREFIX" `
+            -DCMAKE_C_COMPILER="$env:MINGW_BIN/gcc.exe" `
+            -DCMAKE_CXX_COMPILER="$env:MINGW_BIN/g++.exe" `
+            -DCMAKE_MAKE_PROGRAM="$env:NINJA_BIN/ninja.exe"
 
       - name: Build
         run: cmake --build build -j 2
 
       - name: Test
-        run: ctest --test-dir build --output-on-failure
+        run: ctest --test-dir build --output-on-failure --timeout 60
